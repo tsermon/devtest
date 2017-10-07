@@ -35,7 +35,7 @@
         </thead>
 		
 	    <tbody>
-@if(count($jobs) > 0){{-- there jobs to display --}}
+@if(count($jobs) > 0){{-- there are jobs to display --}}
 @foreach($jobs as $job){{-- start of foreach jobs loop --}}
 		  <!-- {{ $job->name }} -->
 		  <tr>
