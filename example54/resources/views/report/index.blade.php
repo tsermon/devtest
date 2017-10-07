@@ -33,32 +33,43 @@
             <th>Cover Letter Paragraph</th>
           </tr>
         </thead>
-
 		
 	    <tbody>
-@foreach($jobs as $job)
+@if(count($jobs) > 0){{-- there jobs to display --}}
+@foreach($jobs as $job){{-- start of foreach jobs loop --}}
 		  <!-- {{ $job->name }} -->
 		  <tr>
-            <td rowspan="{{ $job->skill_count }}" class="job-name">{{ $job->name }}</td>@foreach($job->applicants as $applicant)
+		    <td rowspan="{{ $job->job_name_rowspan() }}" class="job-name">{{ $job->name }}</td>
+@if(count($job->applicants) > 0)
+@foreach($job->applicants as $applicant)
 @if(!($loop->first))
-		  <tr>@endif		  
-			<td rowspan="{{ sizeof($applicant->skills) }}" class="applicant-name">{{ $applicant->name }}</td>
-            <td rowspan="{{ sizeof($applicant->skills) }}"><a href="mailto:{{ $applicant->email }}">{{ $applicant->email }}</a></td>
-            <td rowspan="{{ sizeof($applicant->skills) }}"><a href="{{ $applicant->website }}">{{ preg_replace('/.*\/\/(.*)/', '$1', $applicant->website) }}</td>
-            <td>{{ $applicant->skills[0]->name }}</td>
-            <td rowspan="{{ sizeof($applicant->skills) }}">{{ $applicant->cover_letter }}</td>
+		  <tr>
+@endif
+			<td rowspan="{{ $applicant->applicant_rowspan() }}" class="applicant-name">{{ $applicant->name }}</td>
+            <td rowspan="{{ $applicant->applicant_rowspan() }}"><a href="mailto:{{ $applicant->email }}">{{ $applicant->email }}</a></td>
+			<td rowspan="{{ $applicant->applicant_rowspan() }}"><a href="{{ $applicant->website }}">{{ $applicant->formatted_website() }}</td>
+            <td>{{ (count($applicant->skills)>0) ? $applicant->skills[0]->name : ''}}</td>
+            <td rowspan="{{ $applicant->applicant_rowspan() }}">{{ $applicant->cover_letter }}</td>
           </tr>
-@for($z = 1; $z<sizeof($applicant->skills); $z++)
-			<tr>
-			  <td>{{ $applicant->skills[$z]->name }}</td>
-			</tr>
+@for($z = 1; $z < count($applicant->skills); $z++)
+		  <tr>
+			<td>{{ $applicant->skills[$z]->name }}</td>
+		  </tr>
 @endfor
-@endforeach		  <!-- {{ $job->name }} -->
-			
 @endforeach
-		
-        </tbody>
+@else{{-- no applicants for this job --}}
+			<td colspan="5">No Applicants</td>
+		  </tr>
+@endif
+		  <!-- {{ $job->name }} -->	
 
+@endforeach{{-- end of foreach jobs loop --}}
+@else {{-- no jobs to display --}}
+		  <tr>
+			<td colspan="6">No Jobs</td>
+		  </tr>	
+@endif
+        </tbody>
 		
         <tfooter>
           <tr>
