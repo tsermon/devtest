@@ -38,3 +38,4 @@ class Applicant extends Model
 	}
 	
 }
+
